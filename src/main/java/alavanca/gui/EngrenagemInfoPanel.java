@@ -14,45 +14,58 @@ import alavanca.Engrenagem;
 
 public class EngrenagemInfoPanel extends JPanel {
 	private Engrenagem engrenagem;
-	
-	private JLabel lbPosX = new JLabel();
-	private JLabel lbPosY = new JLabel();
+
+	private JSpinner spPosX;
+	private JSpinner spPosY;;
 	private JSpinner spRaio;
 	private JLabel lbAlfaRange;
 
 	private PropertyChangeHandler handler = new PropertyChangeHandler();
-	
+
 	public EngrenagemInfoPanel(Engrenagem engrenagem) {
 		super(new GridLayout(0, 2));
 		this.engrenagem = engrenagem;
-		
+
 		initComponents();
 	}
-	
+
 	private void initComponents() {
 		add(new JLabel("Pos X: "));
-		add(lbPosX);
+		spPosX = new JSpinner(new SpinnerNumberModel(0.0, -1000.0, 1000.0, 1.0));
+		add(spPosX);
+
+		spPosX.addChangeListener((ev) -> {
+			Double val = (Double) spPosX.getValue();
+			engrenagem.setCentro(val, engrenagem.getCentro().getY());
+		});
+
 		add(new JLabel("Pos Y: "));
-		add(lbPosY);
-		
+		spPosY = new JSpinner(new SpinnerNumberModel(0.0, -1000.0, 1000.0, 1.0));
+		add(spPosY);
+
+		spPosY.addChangeListener((ev) -> {
+			Double val = (Double) spPosY.getValue();
+			engrenagem.setCentro(engrenagem.getCentro().getX(), val);
+		});
+
 		add(new JLabel("Raio: "));
-		spRaio = new JSpinner(new SpinnerNumberModel(0.0,0.0,1000.0,5));
+		spRaio = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 1000.0, 5));
 		add(spRaio);
-		
+
 		spRaio.addChangeListener((ev) -> {
 			Double val = (Double) spRaio.getValue();
 			engrenagem.setRaioBarra(val);
 		});
-		
+
 		lbAlfaRange = new JLabel();
 		lbAlfaRange.setToolTipText("Amplitude do movimento angular.");
 		add(new JLabel("Amplitude: "));
 		add(lbAlfaRange);
 	}
-	
+
 	private void updCentro(Point2D centro) {
-		lbPosX.setText(String.format("%1$.2f", centro.getX()));
-		lbPosY.setText(String.format("%1$.2f", centro.getY()));
+		spPosX.setValue(centro.getX());
+		spPosY.setValue(centro.getY());
 	}
 
 	private void updAlfaRange(Double alfa) {

@@ -101,6 +101,10 @@ public class BarraView extends ElementView {
 		}
 	}
 
+	public void enforceFollowerAngularRange(double range) {
+		barra.enforceFollowerAngularRange(range);
+	}
+
 	class PropertyChangeHandler implements PropertyChangeListener {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
