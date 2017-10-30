@@ -11,14 +11,14 @@ import alavanca.view.EngrenagemView;
 
 public class ViewConfFrame extends JFrame {
 	
-	private EngrenagemView mestre;
-	private EngrenagemView escravo;
+	private EngrenagemView leader;
+	private EngrenagemView follower;
 	private BarraView barra;
 	
-	public ViewConfFrame(EngrenagemView mestre, EngrenagemView escravo, BarraView barra) {
+	public ViewConfFrame(EngrenagemView leader, EngrenagemView follower, BarraView barra) {
 		super();
-		this.mestre = mestre;
-		this.escravo = escravo;
+		this.leader = leader;
+		this.follower = follower;
 		this.barra = barra;
 		initComponents();
 	}
@@ -26,13 +26,13 @@ public class ViewConfFrame extends JFrame {
 	public void initComponents() {
 		Box main = new Box(BoxLayout.Y_AXIS);
 		
-		EngrenagemViewConfPanel pnMestre = new EngrenagemViewConfPanel(mestre);
-		pnMestre.setBorder(BorderFactory.createTitledBorder("Engr. Mestre"));
-		main.add(pnMestre);
+		EngrenagemViewConfPanel pnLeader = new EngrenagemViewConfPanel(leader);
+		pnLeader.setBorder(BorderFactory.createTitledBorder("Engr. Líder"));
+		main.add(pnLeader);
 		
-		EngrenagemViewConfPanel pnEscravo = new EngrenagemViewConfPanel(escravo);
-		pnEscravo.setBorder(BorderFactory.createTitledBorder("Engr. Escravo"));
-		main.add(pnEscravo);
+		EngrenagemViewConfPanel pnFollower = new EngrenagemViewConfPanel(follower);
+		pnFollower.setBorder(BorderFactory.createTitledBorder("Engr. Seguidora"));
+		main.add(pnFollower);
 
 		BarraViewConfPanel pnBarra = new BarraViewConfPanel(barra);
 		pnBarra.setBorder(BorderFactory.createTitledBorder("Barra"));

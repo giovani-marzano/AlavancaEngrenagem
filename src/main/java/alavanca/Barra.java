@@ -13,64 +13,64 @@ public class Barra {
 	 */
 	private double tamanho = 100;
 	/**
-	 * Engrenagem escrava em que a barra está ligada
+	 * Engrenagem seguidora em que a barra está ligada
 	 */
-	private Engrenagem escravo;
+	private Engrenagem follower;
 	/**
-	 * Engrenagem mestre em que a barra está ligada
+	 * Engrenagem líder em que a barra está ligada
 	 */
-	private Engrenagem mestre;
+	private Engrenagem leader;
 	
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public Barra(Engrenagem escravo, Engrenagem mestre) {
-		this.escravo = escravo;
-		escravo.setBarra(this);
-		this.mestre = mestre;
-		mestre.setBarra(this);
+	public Barra(Engrenagem follower, Engrenagem leader) {
+		this.follower = follower;
+		follower.setBarra(this);
+		this.leader = leader;
+		leader.setBarra(this);
 		
 		PropertyChangeListener listener = new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				updateEscravoAlfa();
+				updateFollowerAlfa();
 			}
 		};
 		
-		escravo.addPropertyChangeListener(listener);
-		mestre.addPropertyChangeListener(listener);
+		follower.addPropertyChangeListener(listener);
+		leader.addPropertyChangeListener(listener);
 	}
 	
 	/**
 	 * Ajusta a posição angular da engrenagem escravo de acordo com o estado
 	 * do sistema.
 	 */
-	private void updateEscravoAlfa() {
-		double dist = mestre.getPontoBarra().distance(escravo.getCentro());
+	private void updateFollowerAlfa() {
+		double dist = leader.getPontoBarra().distance(follower.getCentro());
 
-		if (escravo.getAlcanceMenor() <= dist && dist <= escravo.getAlcanceMaior()) {
+		if (follower.getAlcanceMenor() <= dist && dist <= follower.getAlcanceMaior()) {
 			// Existe posição de barra na engrenagem maior que alcança a posição da
 			// barra na engrenagem menor.
-			Point2D cenEng = escravo.getCentro();
-			Point2D cenBar = mestre.getPontoBarra();
+			Point2D cenEng = follower.getCentro();
+			Point2D cenBar = leader.getPontoBarra();
 			
-			final double rEng = escravo.getRaioBarra();
+			final double rEng = follower.getRaioBarra();
 			final double rBar = getTamanho();
 			
 			double alfa = Utils.circlesIntersectionAlfa(cenEng, cenBar, rEng, rBar, dist);
 
-			escravo.setAlfa(alfa);
+			follower.setAlfa(alfa);
 		} else {
 			// Não é possível conectar a barra nas duas engrenagens.
 			// Apenas rodamos a engrenagem maior de forma que os pontos de conexão
 			// fiquem o mais próximo possível.
 			if (dist > 0.0) {
-				Point2D p1 = escravo.getCentro();
-				Point2D p2 = mestre.getPontoBarra();
+				Point2D p1 = follower.getCentro();
+				Point2D p2 = leader.getPontoBarra();
 				double x = (p2.getX() - p1.getX());
 				double y = (p2.getY() - p1.getY());
 				double alfa = Math.atan2(-y, x);
 
-				escravo.setAlfa(alfa);
+				follower.setAlfa(alfa);
 			}
 		}
 	}
@@ -83,12 +83,12 @@ public class Barra {
 		pcs.removePropertyChangeListener(listener);
 	}
 
-	public Engrenagem getEscravo() {
-		return escravo;
+	public Engrenagem getFollower() {
+		return follower;
 	}
 
-	public Engrenagem getMestre() {
-		return mestre;
+	public Engrenagem getLeader() {
+		return leader;
 	}
 
 	public double getTamanho() {
@@ -101,16 +101,16 @@ public class Barra {
 		pcs.firePropertyChange("tamanho", oldValue, newValue);
 	}
 	
-	public Point2D getPontoEscravo() {
-		return escravo.getPontoBarra();
+	public Point2D getPontoFollower() {
+		return follower.getPontoBarra();
 	}
 	
-	public Point2D getPontoMestre() {
-		return mestre.getPontoBarra();
+	public Point2D getPontoLeader() {
+		return leader.getPontoBarra();
 	}
 	
 	public boolean isValid() {		
-		double dist = getPontoMestre().distance(getPontoEscravo());
+		double dist = getPontoLeader().distance(getPontoFollower());
 
 		return Math.abs(dist - tamanho) < ERR;
 	}

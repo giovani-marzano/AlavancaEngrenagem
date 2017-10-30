@@ -28,8 +28,8 @@ public class BarraView extends ElementView {
 		updateEstrutura();
 		
 		barra.addPropertyChangeListener(propChangeHandler);
-		barra.getMestre().addPropertyChangeListener(propChangeHandler);
-		barra.getEscravo().addPropertyChangeListener(propChangeHandler);
+		barra.getLeader().addPropertyChangeListener(propChangeHandler);
+		barra.getFollower().addPropertyChangeListener(propChangeHandler);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class BarraView extends ElementView {
 	}
 	
 	private void updateEsquema() {
-		esquema.setLine(barra.getPontoMestre(), barra.getPontoEscravo());		
+		esquema.setLine(barra.getPontoLeader(), barra.getPontoFollower());		
 		setDirty(true);
 	}
 	

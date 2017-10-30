@@ -11,20 +11,20 @@ import alavanca.Engrenagem;
 
 public class InfoFrame extends JFrame {
 	
-	public InfoFrame(Engrenagem mestre, Engrenagem escravo, Barra barra) {
-		initComponents(mestre, escravo, barra);
+	public InfoFrame(Engrenagem leader, Engrenagem follower, Barra barra) {
+		initComponents(leader, follower, barra);
 	}
 	
-	private void initComponents(Engrenagem mestre, Engrenagem escravo, Barra barra) {
+	private void initComponents(Engrenagem leader, Engrenagem follower, Barra barra) {
 		Box main = new Box(BoxLayout.Y_AXIS);
 
-		EngrenagemInfoPanel pnMestre = new EngrenagemInfoPanel(mestre);
-		pnMestre.setBorder(BorderFactory.createTitledBorder("Engr. Mestre"));
-		main.add(pnMestre);
+		EngrenagemInfoPanel pnLeader = new EngrenagemInfoPanel(leader);
+		pnLeader.setBorder(BorderFactory.createTitledBorder("Engr. Líder"));
+		main.add(pnLeader);
 
-		EngrenagemInfoPanel pnEscravo = new EngrenagemInfoPanel(escravo);
-		pnEscravo.setBorder(BorderFactory.createTitledBorder("Engr. Escrava"));
-		main.add(pnEscravo);
+		EngrenagemInfoPanel pnFollower = new EngrenagemInfoPanel(follower);
+		pnFollower.setBorder(BorderFactory.createTitledBorder("Engr. Seguidora"));
+		main.add(pnFollower);
 
 		BarraInfoPanel pnBarra = new BarraInfoPanel(barra);
 		pnBarra.setBorder(BorderFactory.createTitledBorder("Barra"));

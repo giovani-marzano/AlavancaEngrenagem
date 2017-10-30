@@ -33,8 +33,8 @@ public class App extends JPanel {
 	static final int WIDTH = 600;
 	static final int HEIGHT = 480;
 	
-	private EngrenagemView engrenagemEscravo;
-	private EngrenagemView engrenagemMestre;
+	private EngrenagemView followerGear;
+	private EngrenagemView leaderGear;
 	private BarraView barra;
 	
 	private MouseHandler mouseHandler;
@@ -56,35 +56,35 @@ public class App extends JPanel {
 		
 		setBackground(Color.WHITE);
 		
-		Engrenagem escravo = new Engrenagem();
-		Engrenagem mestre = new Engrenagem();
+		Engrenagem follower = new Engrenagem();
+		Engrenagem leader = new Engrenagem();
 		
-		mestre.setCentro(200, 200);
-		mestre.setAlfa(Math.PI/2);
-		mestre.setRaioBarra(20);
+		leader.setCentro(200, 200);
+		leader.setAlfa(Math.PI/2);
+		leader.setRaioBarra(20);
 		
-		escravo.setAlfa(Math.PI/4);
+		follower.setAlfa(Math.PI/4);
 		
-		Barra barraModel = new Barra(escravo, mestre);
+		Barra barraModel = new Barra(follower, leader);
 		
 		barra = new BarraView(barraModel);
 		
-		engrenagemEscravo = new EngrenagemView(escravo);
-		engrenagemMestre = new EngrenagemView(mestre);		
+		followerGear = new EngrenagemView(follower);
+		leaderGear = new EngrenagemView(leader);		
 	
 		playTimer = new Timer(frameMs, (ev) -> {
-			double alfa = mestre.getAlfa();
+			double alfa = leader.getAlfa();
 			alfa += (radPerSec * frameMs)/1000;
-			mestre.setAlfa(alfa);
+			leader.setAlfa(alfa);
 		});
 				
 		playAction = new PlayAction();
 		stopAction = new StopAction();
 		
-		infoFrame = new InfoFrame(mestre, escravo, barraModel);
+		infoFrame = new InfoFrame(leader, follower, barraModel);
 		showInfoAction = new ShowFrameAction(infoFrame, "Info");
 		
-		confFrame = new ViewConfFrame(engrenagemMestre, engrenagemEscravo, barra);
+		confFrame = new ViewConfFrame(leaderGear, followerGear, barra);
 		showConfAction = new ShowFrameAction(confFrame, "Conf");
 		
 		mouseHandler = new MouseHandler();
@@ -99,8 +99,8 @@ public class App extends JPanel {
 		};
 		
 		barra.addPropertyChangeListener("dirty", dirtyListener);
-		engrenagemMestre.addPropertyChangeListener("dirty", dirtyListener);
-		engrenagemEscravo.addPropertyChangeListener("dirty", dirtyListener);
+		leaderGear.addPropertyChangeListener("dirty", dirtyListener);
+		followerGear.addPropertyChangeListener("dirty", dirtyListener);
 	}
 	
     @Override
@@ -109,12 +109,12 @@ public class App extends JPanel {
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
-		engrenagemEscravo.paintAlcance(g2);
-		engrenagemMestre.paintAlcance(g2);
-		engrenagemEscravo.paintEstrutura(g2);
-		engrenagemMestre.paintEstrutura(g2);
-		engrenagemEscravo.paintEsquema(g2);
-		engrenagemMestre.paintEsquema(g2);
+		followerGear.paintAlcance(g2);
+		leaderGear.paintAlcance(g2);
+		followerGear.paintEstrutura(g2);
+		leaderGear.paintEstrutura(g2);
+		followerGear.paintEsquema(g2);
+		leaderGear.paintEsquema(g2);
 
 		barra.paint(g2);
 	}
@@ -159,10 +159,10 @@ public class App extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (engrenagemMestre.contains(e.getPoint())) {
-				selected = engrenagemMestre;
-			} else if (engrenagemEscravo.contains(e.getPoint())) {
-				selected = engrenagemEscravo;
+			if (leaderGear.contains(e.getPoint())) {
+				selected = leaderGear;
+			} else if (followerGear.contains(e.getPoint())) {
+				selected = followerGear;
 			}
 		}
 
