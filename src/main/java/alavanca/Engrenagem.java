@@ -20,6 +20,15 @@ public class Engrenagem {
 	private Point2D pontoBarra;
 	
 	/**
+	 * Limite mínimo em radianos da amplitude do movimento angular da engrenagem.
+	 */
+	private double alfaMin = 0;
+	/**
+	 * Limite máximo em radianos da amplitude do movimento angular da engrenagem.
+	 */
+	private double alfaMax = 2*Math.PI;
+	
+	/**
 	 * Barra conectada à engrenagem.
 	 */
 	private Barra barra;
@@ -102,6 +111,43 @@ public class Engrenagem {
 			updatePontoBarra();
 			pcs.firePropertyChange("alfa", oldValue, newValue);
 		}
+	}
+
+	public double getAlfaMin() {
+		return alfaMin;
+	}
+
+	public void setAlfaMin(double alfaMin) {
+		if (this.alfaMin != alfaMin) {
+			double old = this.alfaMin;
+			double oldRange = getAlfaRange();
+			this.alfaMin = alfaMin;
+			pcs.firePropertyChange("alfaMin", old, alfaMin);
+			pcs.firePropertyChange("alfaRange", oldRange, getAlfaRange());
+		}
+	}
+
+	public double getAlfaMax() {
+		return alfaMax;
+	}
+
+	public void setAlfaMax(double alfaMax) {
+		if (this.alfaMax != alfaMax) {
+			double old = this.alfaMax;
+			double oldRange = getAlfaRange();
+			this.alfaMax = alfaMax;
+			pcs.firePropertyChange("alfaMax", old, alfaMax);
+			pcs.firePropertyChange("alfaRange", oldRange, getAlfaRange());
+		}
+	}
+	
+	/**
+	 * Amplitude em radianos do movimento angular da engrenagem.
+	 * 
+	 * @return Amplitude total em radianos.
+	 */
+	public double getAlfaRange() {
+		return Math.abs(alfaMax - alfaMin);
 	}
 
 	public double getAlcanceMaior() {

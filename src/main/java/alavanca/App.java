@@ -59,13 +59,14 @@ public class App extends JPanel {
 		Engrenagem follower = new Engrenagem();
 		Engrenagem leader = new Engrenagem();
 		
-		leader.setCentro(200, 200);
-		leader.setAlfa(Math.PI/2);
+		leader.setCentro(300, 242);
+		leader.setAlfa(0);
 		leader.setRaioBarra(20);
-		
-		follower.setAlfa(Math.PI/4);
-		
+				
 		Barra barraModel = new Barra(follower, leader);
+		
+		follower.setCentro(300, 148);
+		follower.setRaioBarra(30);
 		
 		barra = new BarraView(barraModel);
 		

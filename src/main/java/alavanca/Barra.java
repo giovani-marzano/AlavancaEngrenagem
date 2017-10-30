@@ -50,6 +50,7 @@ public class Barra {
 		if (follower.getAlcanceMenor() <= dist && dist <= follower.getAlcanceMaior()) {
 			// Existe posição de barra na engrenagem maior que alcança a posição da
 			// barra na engrenagem menor.
+			Point2D cenLeader = leader.getCentro();
 			Point2D cenEng = follower.getCentro();
 			Point2D cenBar = leader.getPontoBarra();
 			
@@ -57,8 +58,16 @@ public class Barra {
 			final double rBar = getTamanho();
 			
 			double alfa = Utils.circlesIntersectionAlfa(cenEng, cenBar, rEng, rBar, dist);
-
+			
+			double distGears = cenEng.distance(cenLeader);
+			double alfaMin = Utils.circlesIntersectionAlfa(cenEng, cenLeader,
+					rEng, leader.getAlcanceMenor(), distGears);
+			double alfaMax = Utils.circlesIntersectionAlfa(cenEng, cenLeader,
+					rEng, leader.getAlcanceMaior(), distGears);
+			
 			follower.setAlfa(alfa);
+			follower.setAlfaMin(alfaMin);
+			follower.setAlfaMax(alfaMax);
 		} else {
 			// Não é possível conectar a barra nas duas engrenagens.
 			// Apenas rodamos a engrenagem maior de forma que os pontos de conexão
@@ -71,6 +80,8 @@ public class Barra {
 				double alfa = Math.atan2(-y, x);
 
 				follower.setAlfa(alfa);
+				follower.setAlfaMin(alfa);
+				follower.setAlfaMax(alfa);
 			}
 		}
 	}
@@ -96,9 +107,12 @@ public class Barra {
 	}
 
 	public void setTamanho(double newValue) {
-		double oldValue = tamanho;
-		tamanho = newValue;
-		pcs.firePropertyChange("tamanho", oldValue, newValue);
+		if (tamanho != newValue) {
+			double oldValue = tamanho;
+			tamanho = newValue;
+			pcs.firePropertyChange("tamanho", oldValue, newValue);
+			updateFollowerAlfa();
+		}
 	}
 	
 	public Point2D getPontoFollower() {

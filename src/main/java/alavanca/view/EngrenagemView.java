@@ -3,6 +3,7 @@ package alavanca.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
+import java.awt.geom.Arc2D.Double;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -11,6 +12,7 @@ import alavanca.Engrenagem;
 
 public class EngrenagemView extends ElementView {
 	private Ellipse2D esquema = new Ellipse2D.Double();
+	private Arc2D esqRange = new Arc2D.Double(Arc2D.PIE);
 
 	private Ellipse2D estrutura = new Ellipse2D.Double();
 	private Arc2D estrDetalhe = new Arc2D.Double(Arc2D.PIE);
@@ -63,6 +65,12 @@ public class EngrenagemView extends ElementView {
 		
 		g.setColor(getEsquemaColor());
 		g.draw(esquema);
+		
+		esqRange.setArcByCenter(c.getX(), c.getY(), w,
+				Math.toDegrees(engrenagem.getAlfaMin()),
+				Math.toDegrees(engrenagem.getAlfaRange()),
+				Arc2D.PIE);
+		g.draw(esqRange);
 		
 		setDirty(false);
 	}

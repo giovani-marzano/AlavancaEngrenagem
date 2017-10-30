@@ -18,7 +18,7 @@ public class EngrenagemInfoPanel extends JPanel {
 	private JLabel lbPosX = new JLabel();
 	private JLabel lbPosY = new JLabel();
 	private JSpinner spRaio;
-	private JLabel lbAlfa = new JLabel();
+	private JLabel lbAlfaRange;
 
 	private PropertyChangeHandler handler = new PropertyChangeHandler();
 	
@@ -30,12 +30,12 @@ public class EngrenagemInfoPanel extends JPanel {
 	}
 	
 	private void initComponents() {
-		add(new JLabel("Pos X:"));
+		add(new JLabel("Pos X: "));
 		add(lbPosX);
-		add(new JLabel("Pos Y:"));
+		add(new JLabel("Pos Y: "));
 		add(lbPosY);
 		
-		add(new JLabel("Raio:"));
+		add(new JLabel("Raio: "));
 		spRaio = new JSpinner(new SpinnerNumberModel(0.0,0.0,1000.0,5));
 		add(spRaio);
 		
@@ -44,8 +44,10 @@ public class EngrenagemInfoPanel extends JPanel {
 			engrenagem.setRaioBarra(val);
 		});
 		
-		add(new JLabel("Alfa:"));
-		add(lbAlfa);
+		lbAlfaRange = new JLabel();
+		lbAlfaRange.setToolTipText("Amplitude do movimento angular.");
+		add(new JLabel("Amplitude: "));
+		add(lbAlfaRange);
 	}
 	
 	private void updCentro(Point2D centro) {
@@ -53,8 +55,8 @@ public class EngrenagemInfoPanel extends JPanel {
 		lbPosY.setText(String.format("%1$.2f", centro.getY()));
 	}
 
-	private void updAlfa(Double alfa) {
-		lbAlfa.setText(String.format("%1$.1f deg", Math.toDegrees(alfa)));
+	private void updAlfaRange(Double alfa) {
+		lbAlfaRange.setText(String.format("%1$.1f deg", Math.toDegrees(alfa)));
 	}
 
 	private void updRaio(Double raio) {
@@ -65,7 +67,7 @@ public class EngrenagemInfoPanel extends JPanel {
 	public void addNotify() {
 		super.addNotify();
 
-		updAlfa(engrenagem.getAlfa());
+		updAlfaRange(engrenagem.getAlfaRange());
 		updRaio(engrenagem.getRaioBarra());
 		updCentro(engrenagem.getCentro());
 		engrenagem.addPropertyChangeListener(handler);
@@ -85,9 +87,9 @@ public class EngrenagemInfoPanel extends JPanel {
 				Point2D centro = (Point2D) evt.getNewValue();
 				updCentro(centro);
 				break;
-			case "alfa":
-				Double alfa = (Double) evt.getNewValue();
-				updAlfa(alfa);
+			case "alfaRange":
+				Double alfaRange = (Double) evt.getNewValue();
+				updAlfaRange(alfaRange);
 				break;
 			case "raioBarra":
 				Double raio = (Double) evt.getNewValue();
