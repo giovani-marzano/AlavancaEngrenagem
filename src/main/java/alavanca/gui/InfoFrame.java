@@ -19,11 +19,11 @@ public class InfoFrame extends JFrame {
 		Box main = new Box(BoxLayout.Y_AXIS);
 
 		EngrenagemInfoPanel pnMestre = new EngrenagemInfoPanel(mestre);
-		pnMestre.setBorder(BorderFactory.createTitledBorder("Engrenagem Mestre"));
+		pnMestre.setBorder(BorderFactory.createTitledBorder("Engr. Mestre"));
 		main.add(pnMestre);
 
 		EngrenagemInfoPanel pnEscravo = new EngrenagemInfoPanel(escravo);
-		pnEscravo.setBorder(BorderFactory.createTitledBorder("Engrenagem Escravo"));
+		pnEscravo.setBorder(BorderFactory.createTitledBorder("Engr. Escrava"));
 		main.add(pnEscravo);
 
 		BarraInfoPanel pnBarra = new BarraInfoPanel(barra);

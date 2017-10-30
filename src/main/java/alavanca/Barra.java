@@ -56,25 +56,7 @@ public class Barra {
 			final double rEng = escravo.getRaioBarra();
 			final double rBar = getTamanho();
 			
-			// X e Y de um ponto de interseção em um sistema de coordenadas em que
-			// a origem é o centro da engrenagem e o eixo x é a linha que liga o
-			// centro da engrenagem maior e o ponto de conexão na engrenagem menor
-			double px = (rEng*rEng - rBar*rBar + dist*dist)/(2*dist);
-			double py = Math.sqrt(rEng*rEng - px*px);
-			
-			// Convertendo px e py para as coordenadas reais
-			//
-			// Coordenadas do vetor unitario que liga cenEng e cenBar
-			double vx = (cenBar.getX() - cenEng.getX())/dist;
-			double vy = (cenBar.getY() - cenEng.getY())/dist;
-			
-			// Para encontrar o ponto real, devemos andar:
-			// - px na direção (vx,vy)
-			// - py na direção (-vy, vx), que é perpendicular a (vx,vy)
-			double x = px * vx + py * (-vy);
-			double y = px * vy + py * vx;
-
-			double alfa = Math.atan2(y, x);
+			double alfa = Utils.circlesIntersectionAlfa(cenEng, cenBar, rEng, rBar, dist);
 
 			escravo.setAlfa(alfa);
 		} else {
@@ -86,7 +68,7 @@ public class Barra {
 				Point2D p2 = mestre.getPontoBarra();
 				double x = (p2.getX() - p1.getX());
 				double y = (p2.getY() - p1.getY());
-				double alfa = Math.atan2(y, x);
+				double alfa = Math.atan2(-y, x);
 
 				escravo.setAlfa(alfa);
 			}
@@ -99,6 +81,14 @@ public class Barra {
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
+	}
+
+	public Engrenagem getEscravo() {
+		return escravo;
+	}
+
+	public Engrenagem getMestre() {
+		return mestre;
 	}
 
 	public double getTamanho() {

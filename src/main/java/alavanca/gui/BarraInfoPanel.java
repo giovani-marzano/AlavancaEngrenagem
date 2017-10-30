@@ -6,13 +6,15 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import alavanca.Barra;
 
 public class BarraInfoPanel extends JPanel {
 	private Barra barra;
 	
-	private JLabel lbTamanho = new JLabel();
+	private JSpinner spTamanho = new JSpinner(new SpinnerNumberModel(0.0,0.0,1000,5.0));
 
 	private PropertyChangeHandler handler = new PropertyChangeHandler();
 	
@@ -24,11 +26,15 @@ public class BarraInfoPanel extends JPanel {
 	
 	private void initComponents() {
 		add(new JLabel("Tamanho:"));
-		add(lbTamanho);
+		add(spTamanho);
+		spTamanho.addChangeListener((ev) -> {
+			Double v = (Double) spTamanho.getValue();
+			barra.setTamanho(v);
+		}); 
 	}
 	
 	private void updTamanho(Double tamanho) {
-		lbTamanho.setText(String.format("%1$.2f", tamanho));
+		spTamanho.setValue(tamanho);
 	}
 
 	@Override

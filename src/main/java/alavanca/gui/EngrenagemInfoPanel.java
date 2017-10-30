@@ -7,6 +7,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import alavanca.Engrenagem;
 
@@ -15,7 +17,7 @@ public class EngrenagemInfoPanel extends JPanel {
 	
 	private JLabel lbPosX = new JLabel();
 	private JLabel lbPosY = new JLabel();
-	private JLabel lbRaio = new JLabel();
+	private JSpinner spRaio;
 	private JLabel lbAlfa = new JLabel();
 
 	private PropertyChangeHandler handler = new PropertyChangeHandler();
@@ -24,7 +26,7 @@ public class EngrenagemInfoPanel extends JPanel {
 		super(new GridLayout(0, 2));
 		this.engrenagem = engrenagem;
 		
-		initComponents();		
+		initComponents();
 	}
 	
 	private void initComponents() {
@@ -32,8 +34,16 @@ public class EngrenagemInfoPanel extends JPanel {
 		add(lbPosX);
 		add(new JLabel("Pos Y:"));
 		add(lbPosY);
+		
 		add(new JLabel("Raio:"));
-		add(lbRaio);
+		spRaio = new JSpinner(new SpinnerNumberModel(0.0,0.0,1000.0,5));
+		add(spRaio);
+		
+		spRaio.addChangeListener((ev) -> {
+			Double val = (Double) spRaio.getValue();
+			engrenagem.setRaioBarra(val);
+		});
+		
 		add(new JLabel("Alfa:"));
 		add(lbAlfa);
 	}
@@ -44,11 +54,11 @@ public class EngrenagemInfoPanel extends JPanel {
 	}
 
 	private void updAlfa(Double alfa) {
-		lbAlfa.setText(String.format("%1$.2f rad", alfa));
+		lbAlfa.setText(String.format("%1$.1f deg", Math.toDegrees(alfa)));
 	}
 
 	private void updRaio(Double raio) {
-		lbRaio.setText(String.format("%1$.2f", raio));
+		spRaio.setValue(raio);
 	}
 
 	@Override

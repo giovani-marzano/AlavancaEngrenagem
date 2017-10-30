@@ -43,7 +43,7 @@ public class Engrenagem {
 	private void updatePontoBarra() {
 		double x, y;
 		x = Math.cos(alfa) * raioBarra + centro.getX();
-		y = Math.sin(alfa) * raioBarra + centro.getY();
+		y = -Math.sin(alfa) * raioBarra + centro.getY();
 		pontoBarra.setLocation(x, y);
 	}
 
@@ -90,6 +90,12 @@ public class Engrenagem {
 	}
 	
 	public void setAlfa(double newValue) {
+		while (newValue < -2*Math.PI) {
+			newValue += 2*Math.PI;
+		}
+		while (newValue > 2*Math.PI) {
+			newValue -= 2*Math.PI;
+		}
 		if (newValue != alfa) {
 			double oldValue = alfa;
 			alfa = newValue;

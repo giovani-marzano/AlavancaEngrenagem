@@ -11,7 +11,7 @@ public class ShowFrameAction extends AbstractAction implements WindowListener {
 	private JFrame frame;
 	private String frameName;
 	
-	public ShowFrameAction(InfoFrame frame, String frameName) {
+	public ShowFrameAction(JFrame frame, String frameName) {
 		super();
 		this.frame = frame;
 		this.frameName = frameName;

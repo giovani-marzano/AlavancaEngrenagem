@@ -1,43 +1,27 @@
-package alavanca;
+package alavanca.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-public class EngrenagemView {
-	/**
-	 * Distância entre o ponto de fixação da barra e a borda da engrenagem.
-	 */
-	private double raioOffset = 10;
-	/**
-	 * Se a parte esquemática da engrenagem está visível.
-	 */
-	private boolean esquemaVisivel = true;
+import alavanca.Engrenagem;
+
+public class EngrenagemView extends ElementView {
 	private Ellipse2D esquema = new Ellipse2D.Double();
 
-	/**
-	 * Se a parte estrutural da engrenagem está visível.
-	 */
-	private boolean estruturaVisivel = true;
 	private Ellipse2D estrutura = new Ellipse2D.Double();
+	private Arc2D estrDetalhe = new Arc2D.Double(Arc2D.PIE);
 	
 	/**
 	 * Se o alcance da barra está visível;
 	 */
-	private boolean alcanceVisivel = true;
+	private boolean alcanceVisible = true;
 	private Ellipse2D alcanceMaior = new Ellipse2D.Double();
 	private Ellipse2D alcanceMenor = new Ellipse2D.Double();
 	
-	/**
-	 * Cor do esquema.
-	 */
-	private Color esquemaColor;
-	/**
-	 * Cor da estrutura.
-	 */
-	private Color estruturaColor;
 	/**
 	 * Cor do alcance da barra.
 	 */
@@ -53,19 +37,24 @@ public class EngrenagemView {
 	}
 
 	public void paintEstrutura(Graphics2D g) {
-		if (!estruturaVisivel) return;
+		if (!isEstruturaVisible()) return;
 		
 		Point2D c = engrenagem.getCentro();
-		double w = engrenagem.getRaioBarra() + raioOffset;
+		double w = engrenagem.getRaioBarra() + offset;
 		estrutura.setFrameFromCenter(c.getX(), c.getY(),
 				c.getX()+w, c.getY()+w);
+		double alfaDeg = Math.toDegrees(engrenagem.getAlfa());
+		estrDetalhe.setArc(estrutura.getBounds2D(), alfaDeg - 10 + 180, 20.0, Arc2D.PIE);
 		
 		g.setColor(getEstruturaColor());
 		g.draw(estrutura);
+		g.fill(estrDetalhe);
+		
+		setDirty(false);
 	}
 	
 	public void paintEsquema(Graphics2D g) {
-		if (!esquemaVisivel) return;
+		if (!isEsquemaVisible()) return;
 		
 		Point2D c = engrenagem.getCentro();
 		double w = engrenagem.getRaioBarra();
@@ -74,10 +63,12 @@ public class EngrenagemView {
 		
 		g.setColor(getEsquemaColor());
 		g.draw(esquema);
+		
+		setDirty(false);
 	}
 	
 	public void paintAlcance(Graphics2D g)  {
-		if (!alcanceVisivel) return;
+		if (!alcanceVisible) return;
 		if (engrenagem.getBarra() == null) return;
 		
 		Point2D c = engrenagem.getCentro();
@@ -94,16 +85,18 @@ public class EngrenagemView {
 		
 		g.setColor(getAlcanceColor());
 		g.fill(area);
+		
+		setDirty(false);
 	}
 	
 	public void paint(Graphics2D g) {
 		paintAlcance(g);
 		paintEstrutura(g);
-		paintEsquema(g);
+		paintEsquema(g);		
 	}
 	
 	public boolean contains(Point2D point) {
-		if (estruturaVisivel) {
+		if (isEstruturaVisible()) {
 			return estrutura.contains(point);
 		} else {
 			return esquema.contains(point);
@@ -111,57 +104,24 @@ public class EngrenagemView {
 	}
 	
 	public boolean contains(double x, double y) {
-		if (estruturaVisivel) {
+		if (isEstruturaVisible()) {
 			return estrutura.contains(x,y);
 		} else {
 			return esquema.contains(x,y);
 		}
 	}
-	
-	public boolean isEsquemaVisivel() {
-		return esquemaVisivel;
+
+	public boolean isAlcanceVisible() {
+		return alcanceVisible;
 	}
 
-	public void setEsquemaVisivel(boolean esquemaVisivel) {
-		this.esquemaVisivel = esquemaVisivel;
-	}
-
-	public boolean isEstruturaVisivel() {
-		return estruturaVisivel;
-	}
-
-	public void setEstruturaVisivel(boolean estruturaVisivel) {
-		this.estruturaVisivel = estruturaVisivel;
-	}
-
-	public boolean isAlcanceVisivel() {
-		return alcanceVisivel;
-	}
-
-	public void setAlcanceVisivel(boolean alcanceVisivel) {
-		this.alcanceVisivel = alcanceVisivel;
-	}
-
-	public Color getEsquemaColor() {
-		if (esquemaColor == null) {
-			esquemaColor = Color.BLUE;
+	public void setAlcanceVisible(boolean alcanceVisivel) {
+		boolean old = this.alcanceVisible;
+		if (old != alcanceVisivel) {
+			this.alcanceVisible = alcanceVisivel;
+			pcs.firePropertyChange("alcanceVisible", old, alcanceVisivel);
+			setDirty(true);
 		}
-		return esquemaColor;
-	}
-
-	public void setEsquemaColor(Color esquemaColor) {
-		this.esquemaColor = esquemaColor;
-	}
-
-	public Color getEstruturaColor() {
-		if (estruturaColor == null) {
-			estruturaColor = Color.BLACK;
-		}
-		return estruturaColor;
-	}
-
-	public void setEstruturaColor(Color estruturaColor) {
-		this.estruturaColor = estruturaColor;
 	}
 
 	public Color getAlcanceColor() {
@@ -172,7 +132,12 @@ public class EngrenagemView {
 	}
 
 	public void setAlcanceColor(Color alcanceColor) {
-		this.alcanceColor = alcanceColor;
+		Color old = this.alcanceColor;
+		if (!old.equals(alcanceColor)) {
+			this.alcanceColor = alcanceColor;
+			pcs.firePropertyChange("alcanceColor", old, alcanceColor);
+			setDirty(true);
+		}
 	}
 
 	public Engrenagem getEngrenagem() {
@@ -181,13 +146,5 @@ public class EngrenagemView {
 
 	public void setEngrenagem(Engrenagem engrenagem) {
 		this.engrenagem = engrenagem;
-	}
-
-	public double getRaioOffset() {
-		return raioOffset;
-	}
-
-	public void setRaioOffset(double raioOffset) {
-		this.raioOffset = raioOffset;
 	}
 }
